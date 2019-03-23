@@ -1,3 +1,5 @@
+-- Defining Functions
+
 -- Exercise one
 halve :: [a] -> ([a], [a])
 halve a = (take ((length a) `div` 2) a,drop ((length a) `div` 2) a)
@@ -72,9 +74,9 @@ mult = \x -> (\y -> (\z -> x * y * z))
 
 -- Exercise 8
 luhnDouble :: Int -> Int
-luhnDouble x =  if x*2 > 9 
-                    then x*2-9 
-                    else x*2
+luhnDouble x =  if x * 2 > 9 
+                    then x * 2 - 9 
+                    else x * 2
 
 luhn :: Int -> Int -> Int -> Int -> Bool
 luhn a b c d = (mod (sum (map luhnDouble [a,c]) + b + d) 10) == 0
