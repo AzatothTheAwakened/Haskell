@@ -7,7 +7,7 @@ allo :: (a -> Bool) -> [a] -> Bool
 allo p = and . map (p)
 
 anyo :: (a -> Bool) -> [a] -> Bool
-anyo p = and . map (p) 
+anyo p = or . map (p)
 
 takeWhileo :: (a -> Bool) -> [a] -> [a]
 takeWhileo p [] = []
@@ -17,7 +17,7 @@ takeWhileo p (x:xs) | p x = x : takeWhileo (p) xs
 dropWhileo :: (a -> Bool) -> [a] -> [a]
 dropWhileo p [] = []
 dropWhileo p (x:xs) | p x = dropWhile (p) xs
-                    | otherwise = x:xs
+ | otherwise = x:xs
 -- Exercise 3
 mapfr :: (a -> b) -> [a] -> [b]
 mapfr f [] = []
@@ -28,11 +28,11 @@ filterfr' p x | p x = [x]
               | otherwise = []
 
 filterfr :: (a -> Bool) -> [a] -> [a]
-filterfr p = foldr (\x y -> (filterfr' (p) x) ++ y ) []
+filterfr p = foldr (\x y -> (filterfr' p x) ++ y ) []
 
 -- Exercise 4
 dec2int :: [Int] -> Int
-dec2int xs = foldl (\x y -> x*10 + y) 0 xs
+dec2int = foldl (\x y -> x*10 + y) 0
 
 -- Exercise 5
 curryo :: ((a,b) -> c) -> a -> b -> c
@@ -42,17 +42,19 @@ uncurryo :: (a -> b -> c) -> (a,b) -> c
 uncurryo f = \(x,y) -> f x y
 
 -- Exercise 6
+unfold :: (t -> Bool) -> (t -> a) -> (t -> t) -> t -> [a]
 unfold p h t x | p x = []
                | otherwise = h x : unfold p h t (t x)
 
 chop8 :: [Int] -> [[Int]]
-chop8 xs = unfold (\x -> length x == 0) (take 8) (drop 8) xs
+chop8 = unfold null (take 8) (drop 8)
 
 mapo :: (a -> b) -> [a] -> [b]
-mapo f = unfold (null) (f . head) (drop 1)
+mapo f = unfold null (f . head) (drop 1)
 
 iterateo :: (a -> a) -> a -> [a]
-iterateo f x = unfold (\x -> True) (f . head ) (id) [x]
+iterateo f x = unfold (const True) (f . head ) (id) [x]
+
 
 -- Exercise 9
 altMap :: (a -> b) -> (a -> b) -> [a] -> [b]
